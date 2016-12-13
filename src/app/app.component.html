@@ -1,0 +1,49 @@
+<md-toolbar color="primary">
+	<span>Marquee Trader Angular Demo 2</span>
+
+</md-toolbar>
+<br>
+
+<nav>
+      <span>
+        <a [routerLink]=" ['./'] ">
+          Index
+        </a>
+      </span>
+	|
+
+	<button md-raised-button
+	        color="primary"
+	        [routerLink]=" ['./home'] ">
+		Default
+	</button>
+	|
+	<button md-raised-button
+	        color="warn"
+	        [routerLink]=" ['./detail'] ">
+		All Tiles
+	</button>
+	|
+	<span>
+        <a [routerLink]=" ['./about'] ">
+          About
+        </a>
+      </span>
+</nav>
+<br>
+
+<main>
+	<router-outlet></router-outlet>
+</main>
+
+<pre class="app-state">this.appState.state = {{ appState.state | json }}</pre>
+
+<!--
+<footer>
+	<span>WebPack Angular 2 Starter by <a [href]="url">@AngularClass</a></span>
+	<div>
+		<a [href]="url">
+			<img [src]="angularclassLogo" width="25%">
+		</a>
+	</div>
+</footer>-->
