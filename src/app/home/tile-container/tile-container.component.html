@@ -1,0 +1,18 @@
+<div>
+	<button (click)="start()">Start</button>
+	<button (click)="stop()">Stop</button>
+	<button (click)="addPair()">Add pairs</button>
+	<button *ngFor="let currencyPair of currencyPairs">
+		<span class="badge">{{ currencyPair }}</span>
+	</button>
+
+	<label>Total Tiles : {{ state.selectedPairs.length }}</label>
+	<label>Update frequency: {{ frequency  }} ms</label>
+
+	<div class="container">
+		<tile *ngFor="let selectedPair of state.selectedPairs"
+		      [price]="selectedPair.price"
+		      [displayName]="selectedPair.key">
+		</tile>
+	</div>
+</div>
