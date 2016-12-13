@@ -4,9 +4,9 @@
 	flex-wrap: wrap;
 }
 
-.container tile{
-	border-color: black;
-	border-style: solid;
-	background: beige;
-	padding: 10px;
+[md-button].md-primary {
+	background-color: #E0E0E0;
+	margin: 5px;
+	border-radius: 15px;
 }
+

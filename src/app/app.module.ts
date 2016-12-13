@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule, PreloadAllModules } from '@angular/router';
 import { removeNgStyles, createNewHosts, createInputTransfer } from '@angularclass/hmr';
+import { MaterialModule } from '@angular/material';
 
 /*
  * Platform and Environment providers/directives/pipes
@@ -20,11 +21,13 @@ import { NoContentComponent } from './no-content';
 import { XLarge } from './home/x-large';
 import { TileComponent } from './home/tile';
 import { TileContainerComponent } from './home/tile-container';
+import { PriceService } from "./home/price.service";
 
 // Application wide providers
 const APP_PROVIDERS = [
   ...APP_RESOLVER_PROVIDERS,
-  AppState
+  AppState,
+  PriceService
 ];
 
 type StoreType = {
@@ -51,7 +54,8 @@ type StoreType = {
     BrowserModule,
     FormsModule,
     HttpModule,
-    RouterModule.forRoot(ROUTES, { useHash: true, preloadingStrategy: PreloadAllModules })
+    RouterModule.forRoot(ROUTES, { useHash: true, preloadingStrategy: PreloadAllModules }),
+    MaterialModule.forRoot()
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,
