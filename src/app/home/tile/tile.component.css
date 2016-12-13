@@ -17,3 +17,7 @@ md-card .tile-buy{
 	padding: 5px;
 	text-align: center;
 }
+
+md-card {
+	margin: 4px;
+}

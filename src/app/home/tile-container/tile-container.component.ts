@@ -16,9 +16,8 @@ export class TileContainerComponent implements OnInit, OnDestroy {
 	randomNumbers: Observable<number>;
 	disposables: Subscription;
 	selectedPairs: Array<any>;
-	state: Object;
-	frequency: number = 10;
-
+	//state: Object;
+	frequency: number = 50;
 
 	constructor(private  priceService: PriceService, private appState: AppState) {
 
@@ -73,10 +72,23 @@ export class TileContainerComponent implements OnInit, OnDestroy {
 		});
 	}
 
+	public startWorker() {
+
+		console.log('start pressed');
+		this.disposables = this.priceService.getWorkerPrices$().subscribe((e:MessageEvent)=> {
+			//console.log(e.data);
+			this.state.selectedPairs.forEach(x=> {
+				x.price1 = (Math.random() * 100).toFixed(2);
+				x.price2 = (Math.random() * 100).toFixed(2);
+			})
+		});
+	}
+
 	stop() {
 		if(this.disposables) {
 			this.disposables.unsubscribe();
 		}
+		this.priceService.stopWorkerPrices();
 	}
 
 	addPair(selectedPair) {
