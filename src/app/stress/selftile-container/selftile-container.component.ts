@@ -1,15 +1,15 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Observable, Subscription } from 'rxjs';
-import { PriceService } from "../price.service";
+import { PriceService } from "../../home/price.service";
 import { AppState } from "../../app.service";
 
 
 @Component({
-	           selector: 'tile-container',
-	           templateUrl: './tile-container.component.html',
-	           styleUrls: ['./tile-container.component.css']
+	           selector: 'self-tile-container',
+	           templateUrl: './selftile-container.component.html',
+	           styleUrls: ['./selftile-container.component.css']
            })
-export class TileContainerComponent implements OnInit, OnDestroy {
+export class SelfTileContainerComponent implements OnInit, OnDestroy {
 
 	currencyPairs: Array<string>;
 	state: any = {selectedPairs: []};
@@ -41,11 +41,7 @@ export class TileContainerComponent implements OnInit, OnDestroy {
 		if (this.state.selectedPairs.length == 0) {
 
 			this.state.selectedPairs.push({
-				                        key: 'USD EUR',
-				                        price1: 300,
-				                        price2: 300,
-				                        currency1: 'USD',
-				                        currency2: 'EUR',
+				                        key: 'USD EUR'
 			                        });
 
 			this.appState.set('selectedPairs', this.state.selectedPairs);
@@ -62,35 +58,33 @@ export class TileContainerComponent implements OnInit, OnDestroy {
 	 */
 	start() {
 
-		console.log('start pressed');
-		this.disposables = this.priceService.getPrices$()
-			.timeInterval()
-			.subscribe((y)=> {
+		/*console.log('start pressed');
+		this.disposables = this.priceService.getPrices$().subscribe(()=> {
 			//console.log(Math.random())
 			this.state.selectedPairs.forEach(x=> {
-				x.price1 = y.interval.toString();
-				x.price2 = y.value.toFixed(2);
+				x.price1 = (Math.random() * 100).toFixed(2);
+				x.price2 = (Math.random() * 100).toFixed(2);
 			})
-		});
+		});*/
 	}
 
 	public startWorker() {
 
-		console.log('start pressed');
+		/*console.log('start pressed');
 		this.disposables = this.priceService.getWorkerPrices$().subscribe((e:MessageEvent)=> {
 			//console.log(e.data);
 			this.state.selectedPairs.forEach(x=> {
 				x.price1 = (Math.random() * 100).toFixed(2);
 				x.price2 = (Math.random() * 100).toFixed(2);
 			})
-		});
+		});*/
 	}
 
 	stop() {
-		if(this.disposables) {
+		/*if(this.disposables) {
 			this.disposables.unsubscribe();
 		}
-		this.priceService.stopWorkerPrices();
+		this.priceService.stopWorkerPrices();*/
 	}
 
 	addPair(selectedPair) {
@@ -99,19 +93,13 @@ export class TileContainerComponent implements OnInit, OnDestroy {
 			this.currencyPairs.forEach((pair)=> {
 				this.state.selectedPairs.push({
 					                              key: pair,
-					                              currency1: pair.split(' ')[0],
-					                              currency2: pair.split(' ')[1],
-					                              price1: 0,
-					                              price2: 0
+					                              streamType:'worker1'
 				                              });
 			});
 		} else {
 			this.state.selectedPairs.push({
 				                              key: selectedPair,
-				                              currency1: selectedPair.split(' ')[0],
-				                              currency2: selectedPair.split(' ')[1],
-				                              price1: 0,
-				                              price2: 0
+				                              streamType:'worker1'
 			                              });
 		}
 		this.appState.set('selectedPairs', this.state.selectedPairs);

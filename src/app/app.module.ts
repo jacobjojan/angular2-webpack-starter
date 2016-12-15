@@ -23,6 +23,9 @@ import { XLarge } from './home/x-large';
 import { TileComponent } from './home/tile';
 import { TileContainerComponent } from './home/tile-container';
 import { PriceService } from "./home/price.service";
+import { StressComponent } from './stress';
+import { SelfTileComponent } from './stress/selftile';
+import { SelfTileContainerComponent } from './stress/selftile-container';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -49,7 +52,10 @@ type StoreType = {
     NoContentComponent,
     XLarge,
     TileComponent,
-    TileContainerComponent
+    TileContainerComponent,
+    StressComponent,
+    SelfTileContainerComponent,
+    SelfTileComponent
   ],
   imports: [ // import Angular's modules
     BrowserModule,
