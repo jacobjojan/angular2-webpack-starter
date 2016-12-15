@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AppState } from '../app.service';
 import { XLarge } from './x-large';
 
@@ -14,7 +14,8 @@ import { XLarge } from './x-large';
   // Our list of styles in our component. We may add more to compose many styles together
   styleUrls: [ './stress.component.css' ],
   // Every Angular template is first compiled by the browser before Angular runs it's compiler
-  templateUrl: './stress.component.html'
+  templateUrl: './stress.component.html',
+  changeDetection : ChangeDetectionStrategy.OnPush
 })
 export class StressComponent {
   // Set our default values

@@ -1,5 +1,5 @@
 <div>
-	<button md-button
+	<!--<button md-button
 	        (click)="start()"
 	        color="primary">Start
 	</button>
@@ -10,7 +10,7 @@
 	<button md-button
 	        (click)="stop()"
 	        color="primary">Stop
-	</button>
+	</button>-->
 	<button md-button
 	        (click)="addPair()"
 	        color="primary">Add all pairs
@@ -25,6 +25,7 @@
 	        color="primary">
 		{{ currencyPair }}
 	</button>
+	<md-checkbox [(ngModel)]="isWorker">Is Worker</md-checkbox>
 
 	<label>Total Tiles : {{ state.selectedPairs.length }}</label> <label>Update frequency:
 	{{ frequency }} ms</label>
