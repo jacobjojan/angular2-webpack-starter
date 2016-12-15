@@ -1,4 +1,7 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import {
+	Component, OnInit, OnDestroy, ChangeDetectionStrategy,
+	ChangeDetectorRef
+} from "@angular/core";
 import { Observable, Subscription } from 'rxjs';
 import { PriceService } from "../../home/price.service";
 import { AppState } from "../../app.service";
@@ -7,7 +10,8 @@ import { AppState } from "../../app.service";
 @Component({
 	           selector: 'self-tile-container',
 	           templateUrl: './selftile-container.component.html',
-	           styleUrls: ['./selftile-container.component.css']
+	           styleUrls: ['./selftile-container.component.css'],
+	           changeDetection : ChangeDetectionStrategy.OnPush
            })
 export class SelfTileContainerComponent implements OnInit, OnDestroy {
 
@@ -16,10 +20,11 @@ export class SelfTileContainerComponent implements OnInit, OnDestroy {
 	randomNumbers: Observable<number>;
 	disposables: Subscription;
 	selectedPairs: Array<any>;
+	isWorker: boolean;
 	//state: Object;
 	frequency: number = 50;
 
-	constructor(private  priceService: PriceService, private appState: AppState) {
+	constructor(private  priceService: PriceService, private appState: AppState, private cd: ChangeDetectorRef) {
 
 
 		this.state = this.appState.get();
@@ -34,6 +39,11 @@ export class SelfTileContainerComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
+
+		setInterval(() => {
+			this.cd.markForCheck();
+		}, 50);
+
 		this.currencyPairs = ['USD EUR', 'USD JPY', 'GBP USD', 'USD CAD'];
 
 		this.state = this.appState.get();
@@ -58,33 +68,18 @@ export class SelfTileContainerComponent implements OnInit, OnDestroy {
 	 */
 	start() {
 
-		/*console.log('start pressed');
-		this.disposables = this.priceService.getPrices$().subscribe(()=> {
-			//console.log(Math.random())
-			this.state.selectedPairs.forEach(x=> {
-				x.price1 = (Math.random() * 100).toFixed(2);
-				x.price2 = (Math.random() * 100).toFixed(2);
-			})
-		});*/
+		console.log('start pressed');
 	}
 
 	public startWorker() {
 
-		/*console.log('start pressed');
-		this.disposables = this.priceService.getWorkerPrices$().subscribe((e:MessageEvent)=> {
-			//console.log(e.data);
-			this.state.selectedPairs.forEach(x=> {
-				x.price1 = (Math.random() * 100).toFixed(2);
-				x.price2 = (Math.random() * 100).toFixed(2);
-			})
-		});*/
 	}
 
 	stop() {
-		/*if(this.disposables) {
+		if(this.disposables) {
 			this.disposables.unsubscribe();
 		}
-		this.priceService.stopWorkerPrices();*/
+		this.priceService.stopWorkerPrices();
 	}
 
 	addPair(selectedPair) {
@@ -93,13 +88,13 @@ export class SelfTileContainerComponent implements OnInit, OnDestroy {
 			this.currencyPairs.forEach((pair)=> {
 				this.state.selectedPairs.push({
 					                              key: pair,
-					                              streamType:'worker1'
+					                              streamType: this.isWorker ? 'worker' :'rx'
 				                              });
 			});
 		} else {
 			this.state.selectedPairs.push({
 				                              key: selectedPair,
-				                              streamType:'worker1'
+				                              streamType: this.isWorker ? 'worker' : 'rx'
 			                              });
 		}
 		this.appState.set('selectedPairs', this.state.selectedPairs);
