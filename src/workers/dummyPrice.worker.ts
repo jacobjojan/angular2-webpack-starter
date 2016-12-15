@@ -8,11 +8,11 @@ export class DummyPriceWorker{
 	constructor(){
 		this.currencyPairs = ['USD EUR', 'USD JPY', 'GBP USD', 'USD CAD'];
 
-		this.randomPrices$ = Observable
-			.range(1, 10000)
+		this.randomPrices$ = Observable.interval(50);
+			/*.range(1, 10000)
 			.concatMap(function (x) {
 				return Observable.of(x).delay(50)
-			});
+			});*/
 	}
 
 	getPrices$() : Observable<number> {
