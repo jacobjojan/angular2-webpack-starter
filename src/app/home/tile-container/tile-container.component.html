@@ -1,9 +1,11 @@
 <div>
-	<button (click)="start()">Start</button>
-	<button (click)="stop()">Stop</button>
-	<button (click)="addPair()">Add pairs</button>
-	<button *ngFor="let currencyPair of currencyPairs">
-		<span class="badge">{{ currencyPair }}</span>
+	<button md-button (click)="start()" color="primary">Start</button>
+	<button md-button (click)="startWorker()" color="primary">Start Worker</button>
+	<button md-button (click)="stop()" color="primary">Stop</button>
+	<button md-button (click)="addPair()" color="primary">Add all pairs</button>
+	<button md-button (click)="clearAll()" color="primary">Clear</button>
+	<button *ngFor="let currencyPair of currencyPairs" md-button (click)="addPair(currencyPair)" color="primary">
+		{{ currencyPair }}
 	</button>
 
 	<label>Total Tiles : {{ state.selectedPairs.length }}</label>
@@ -11,7 +13,10 @@
 
 	<div class="container">
 		<tile *ngFor="let selectedPair of state.selectedPairs"
-		      [price]="selectedPair.price"
+		      [price1]="selectedPair.price1"
+		      [price2]="selectedPair.price2"
+		      [currency1]="selectedPair.currency1"
+		      [currency2]="selectedPair.currency2"
 		      [displayName]="selectedPair.key">
 		</tile>
 	</div>
