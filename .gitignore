@@ -31,7 +31,14 @@ Icon?
 Thumbs.db
 
 # Node Files #
-/node_modules
+
+!/node_modules
+
+/node_modules/*
+!/node_modules/@types
+!/node_modules/@angular
+!/node_modules/@angular2-material
+!/node_modules/@angularclass
 /bower_components
 npm-debug.log
 
