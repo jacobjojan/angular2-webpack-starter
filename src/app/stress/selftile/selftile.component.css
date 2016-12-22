@@ -1,23 +1,37 @@
+md-card {
+	text-align: center;
+	border-radius: 15px;
+	max-width: 150px;
+	margin: 10px;
+	padding: 5px 15px;
+}
 
 md-card .tile-sell{
 	background-color: #FFCDD2;
-	padding:15px 10px 4px 10px;
-	text-align: center;
-	border-radius: 15px;
 }
 
 md-card .tile-buy{
 	background-color: rgb(220,237,200);
-	padding:15px 10px 4px 10px;
-	text-align: center;
-	border-radius: 15px;
 }
 
-.tile-container{
-	padding: 5px;
-	text-align: center;
+md-card-title {
+	margin: 5px;
+	font-size: 18px;
 }
 
-md-card {
-	margin: 4px;
+md-card-subtitle {
+	margin: 5px;
+	font-size: 14px;
+}
+
+.top-row, .middle-row, .bottom-row {
+	padding: 0;
+	text-align: center;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+
+md-card-title-group .bottom-row {
+	flex-direction: row;
 }

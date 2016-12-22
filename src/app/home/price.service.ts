@@ -12,7 +12,6 @@ import 'rxjs/add/operator/share';
 
 @Injectable()
 export class PriceService {
-	randomPrices$: Observable<number>;
 	currencyPairs: Array<string>;
 	workerPrices$: Observable<any>;
 	private worker: Worker;
@@ -52,14 +51,9 @@ export class PriceService {
 			price: (Math.random() * 100).toFixed(2)
 		}))
 		.publish().refCount();
-		// .share();
-
 
 	constructor() {
 		this.currencyPairs = ['USD EUR', 'USD JPY', 'GBP USD', 'USD CAD'];
-
-		this.randomPrices$ = Observable.interval(50)
-			.map(() => (Math.random() * 100));
 
 		this.workerInitialized = false;
 
@@ -88,10 +82,6 @@ export class PriceService {
 
 	public resetTiles() : void {
 		this.resetTilesSubject$.next();
-	}
-
-	public getPrices$(): Observable<number> {
-		return this.randomPrices$;
 	}
 
 	public getWorkerPrices$(): Observable<any> {
