@@ -1,6 +1,6 @@
 import {
 	Component, OnInit, OnDestroy, ChangeDetectionStrategy,
-	ChangeDetectorRef
+	ChangeDetectorRef, NgZone
 } from "@angular/core";
 import { Observable, Subscription } from 'rxjs';
 import { PriceService } from "../../home/price.service";
@@ -23,8 +23,10 @@ export class SelfTileContainerComponent implements OnInit, OnDestroy {
 	private frequency: number = 50;
 	private tileId: number = 0;
 
-	constructor(private  priceService: PriceService, private appState: AppState,
-	            private cd: ChangeDetectorRef) {
+	constructor(private  priceService: PriceService,
+	            private appState: AppState,
+	            private cd: ChangeDetectorRef,
+				private zone: NgZone) {
 
 
 		this.state = this.appState.get();
@@ -40,9 +42,14 @@ export class SelfTileContainerComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 
-		setInterval(() => {
-			this.cd.markForCheck();
-		}, 50);
+		//Change proposed by google
+		this.cd.detach();
+		this.zone.runOutsideAngular(()=> {
+			setInterval(() => {
+				this.cd.markForCheck();
+				this.cd.detectChanges();
+			}, 50);
+		});
 
 		this.currencyPairs = ['USD EUR', 'USD JPY', 'GBP USD', 'USD CAD'];
 
