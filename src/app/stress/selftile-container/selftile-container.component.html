@@ -3,10 +3,6 @@
 	        (click)="addPairs(10)"
 	        color="primary">Add 10 Tiles
 	</button>
-	<button md-button
-	        (click)="clearAll()"
-	        color="primary">Clear
-	</button>
 	<button *ngFor="let currencyPair of currencyPairs"
 	        md-button
 	        (click)="addPair(currencyPair)"
