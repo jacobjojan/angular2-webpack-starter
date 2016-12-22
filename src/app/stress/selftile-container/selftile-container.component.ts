@@ -2,7 +2,7 @@ import {
 	Component, OnInit, OnDestroy, ChangeDetectionStrategy,
 	ChangeDetectorRef
 } from "@angular/core";
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { PriceService } from "../../home/price.service";
 import { AppState } from "../../app.service";
 
@@ -80,12 +80,12 @@ export class SelfTileContainerComponent implements OnInit, OnDestroy {
 		this.priceService.stopWorkerPrices();
 	}
 
-	addAllPairs() {
-		this.currencyPairs.forEach( pair => {
-			let t = this.getNewTile(pair);
+	addPairs(numberToAdd) {
+		for(var i=1; i<numberToAdd; i++){
+			let t = this.getNewTile(this.currencyPairs[0]);
 			this.state.selectedPairs.push(t);
 			this.priceService.addTile(t.tileId);
-		});
+		}
 		this.appState.set('selectedPairs', this.state.selectedPairs);
 	}
 
