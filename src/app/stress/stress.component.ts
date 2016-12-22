@@ -1,16 +1,13 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AppState } from '../app.service';
-import { XLarge } from './x-large';
 
 @Component({
   // The selector is what angular internally uses
   // for `document.querySelectorAll(selector)` in our index.html
-  // where, in this case, selector is the string 'home'
-  selector: 'home',  // <home></home>
+  // where, in this case, selector is the string 'stress'
+  selector: 'stress',  // <stress></stress>
   // We need to tell Angular's Dependency Injection which providers are in our app.
-  providers: [
-
-  ],
+  providers: [ ],
   // Our list of styles in our component. We may add more to compose many styles together
   styleUrls: [ './stress.component.css' ],
   // Every Angular template is first compiled by the browser before Angular runs it's compiler
@@ -21,13 +18,10 @@ export class StressComponent {
   // Set our default values
   localState = { value: '' };
   // TypeScript public modifiers
-  constructor(public appState: AppState) {
-
-  }
+  constructor(public appState: AppState) { }
 
   ngOnInit() {
-    console.log('hello `Home` component');
-    // this.title.getData().subscribe(data => this.data = data);
+    console.log('hello `Stress` component');
   }
 
   submitState(value: string) {

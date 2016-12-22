@@ -3,7 +3,7 @@ import {
 	ChangeDetectorRef, NgZone
 } from "@angular/core";
 import { Subscription } from 'rxjs';
-import { PriceService } from "../../home/price.service";
+import { PriceService } from "../price.service";
 import { AppState } from "../../app.service";
 
 
@@ -68,16 +68,11 @@ export class SelfTileContainerComponent implements OnInit, OnDestroy {
 	 * Function to start the price
 	 */
 	start() {
-
 		console.log('start pressed');
 	}
 
 	public getNextTileId() {
 		return ++this.tileId;
-	}
-
-	public startWorker() {
-
 	}
 
 	stop() {
