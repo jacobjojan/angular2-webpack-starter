@@ -16,13 +16,9 @@ import { ROUTES } from './app.routes';
 import { AppComponent } from './app.component';
 import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 import { AppState, InternalStateType } from './app.service';
-import { HomeComponent } from './home';
 import { AboutComponent } from './about';
 import { NoContentComponent } from './no-content';
-import { XLarge } from './home/x-large';
-import { TileComponent } from './home/tile';
-import { TileContainerComponent } from './home/tile-container';
-import { PriceService } from "./home/price.service";
+import { PriceService } from "./stress/price.service";
 import { StressComponent } from './stress';
 import { SelfTileComponent } from './stress/selftile';
 import { SelfTileContainerComponent } from './stress/selftile-container';
@@ -48,11 +44,7 @@ type StoreType = {
   declarations: [
     AppComponent,
     AboutComponent,
-    HomeComponent,
     NoContentComponent,
-    XLarge,
-    TileComponent,
-    TileContainerComponent,
     StressComponent,
     SelfTileContainerComponent,
     SelfTileComponent

@@ -5,30 +5,17 @@
 <br>
 
 <nav>
-      <span>
-        <a [routerLink]=" ['./'] ">
-          Index
-        </a>
-      </span>
-	|
-
 	<button md-raised-button
 	        color="primary"
-	        [routerLink]=" ['./home'] ">
-		Subscribing Container
-	</button>
-	|
-	<button md-raised-button
-	        color="warn"
 	        [routerLink]=" ['./stress'] ">
 		Subscribing Tiles
 	</button>
 	|
-	<span>
-        <a [routerLink]=" ['./about'] ">
-          About
-        </a>
-      </span>
+	<button md-raised-button
+			color="warn"
+			[routerLink]=" ['./about'] ">
+		About
+	</button>
 </nav>
 <br>
 
@@ -37,13 +24,3 @@
 </main>
 
 <pre class="app-state">this.appState.state = {{ appState.state | json }}</pre>
-
-<!--
-<footer>
-	<span>WebPack Angular 2 Starter by <a [href]="url">@AngularClass</a></span>
-	<div>
-		<a [href]="url">
-			<img [src]="angularclassLogo" width="25%">
-		</a>
-	</div>
-</footer>-->
