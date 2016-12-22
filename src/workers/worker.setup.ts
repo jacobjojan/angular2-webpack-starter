@@ -12,15 +12,18 @@ onmessage = (e: MessageEvent) => {
 	switch (e.data.command) {
 
 		case 'start':
-			disposible
-				= dummyPriceWorker.getPrices$().subscribe(price => {
-				(<any>postMessage)(price);
-			});
+			if (!disposible) {
+				disposible = dummyPriceWorker.getPrices$()
+					.subscribe(price => { (<any>postMessage)(price); });
+			}
 			break;
 		case 'stop':
 			if(disposible && disposible.unsubscribe){
 				disposible.unsubscribe();
 			}
+			break;
+		case 'add':
+
 
 	}
 }

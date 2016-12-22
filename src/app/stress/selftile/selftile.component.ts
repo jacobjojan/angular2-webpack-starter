@@ -2,9 +2,9 @@ import {
 	Component, Input, OnInit, OnDestroy,
 	ChangeDetectionStrategy, ChangeDetectorRef
 } from '@angular/core';
-import { PriceService } from "../../home/price.service";
+import { PriceService } from "../price.service";
 import { Subscription } from "rxjs";
-import { timeInterval } from "rxjs/operator/timeInterval";
+import 'rxjs/add/operator/timeInterval';
 
 @Component({
 	           selector: 'self-tile',

@@ -1,9 +1,9 @@
 import {
 	Component, OnInit, OnDestroy, ChangeDetectionStrategy,
-	ChangeDetectorRef, NgZone
+	ChangeDetectorRef, Input, NgZone
 } from "@angular/core";
-import { Observable, Subscription } from 'rxjs';
-import { PriceService } from "../../home/price.service";
+import { Subscription } from 'rxjs';
+import { PriceService } from "../price.service";
 import { AppState } from "../../app.service";
 
 
@@ -19,16 +19,25 @@ export class SelfTileContainerComponent implements OnInit, OnDestroy {
 	state: any = {selectedPairs: []};
 	disposable: Subscription;
 	selectedPairs: Array<any>;
-	isWorker: boolean;
+	_isWorker: boolean = false;
 	private frequency: number = 50;
 	private tileId: number = 0;
+
+	@Input()
+	set isWorker(isWorker:boolean) {
+		console.log('isWorker setter called with '+isWorker);
+		this._isWorker = isWorker;
+	}
+
+	get isWorker(): boolean {
+		return this._isWorker;
+	}
 
 	constructor(private  priceService: PriceService,
 	            private appState: AppState,
 	            private cd: ChangeDetectorRef,
 				private zone: NgZone) {
-
-
+		
 		this.state = this.appState.get();
 
 		if (!this.state.hasOwnProperty('selectedPairs')) {
@@ -51,7 +60,7 @@ export class SelfTileContainerComponent implements OnInit, OnDestroy {
 			}, 50);
 		});
 
-		this.currencyPairs = ['USD EUR', 'USD JPY', 'GBP USD', 'USD CAD'];
+		this.currencyPairs = ['USD EUR', 'USD JPY'];
 
 		this.state = this.appState.get();
 
@@ -68,16 +77,11 @@ export class SelfTileContainerComponent implements OnInit, OnDestroy {
 	 * Function to start the price
 	 */
 	start() {
-
 		console.log('start pressed');
 	}
 
 	public getNextTileId() {
 		return ++this.tileId;
-	}
-
-	public startWorker() {
-
 	}
 
 	stop() {
@@ -87,12 +91,12 @@ export class SelfTileContainerComponent implements OnInit, OnDestroy {
 		this.priceService.stopWorkerPrices();
 	}
 
-	addAllPairs() {
-		this.currencyPairs.forEach( pair => {
-			let t = this.getNewTile(pair);
+	addPairs(numberToAdd) {
+		for(var i=1; i<numberToAdd; i++){
+			let t = this.getNewTile(this.currencyPairs[0]);
 			this.state.selectedPairs.push(t);
 			this.priceService.addTile(t.tileId);
-		});
+		}
 		this.appState.set('selectedPairs', this.state.selectedPairs);
 	}
 
@@ -114,9 +118,9 @@ export class SelfTileContainerComponent implements OnInit, OnDestroy {
 	clearAll() {
 		this.stop();
 		this.state.selectedPairs = [];
+		this.tileId = 0;
 		this.priceService.resetTiles();
 		this.appState.set('selectedPairs', this.state.selectedPairs);
 	}
-
 }
 

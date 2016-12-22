@@ -1,5 +1,4 @@
 import { Routes, RouterModule } from '@angular/router';
-import { HomeComponent } from './home';
 import { AboutComponent } from './about';
 import { NoContentComponent } from './no-content';
 
@@ -8,8 +7,7 @@ import { StressComponent } from "./stress/stress.component";
 
 
 export const ROUTES: Routes = [
-  { path: '',      component: HomeComponent },
-  { path: 'home',  component: HomeComponent },
+  { path: '',      component: StressComponent },
   { path: 'about', component: AboutComponent },
   { path: 'stress', component: StressComponent },
   {
