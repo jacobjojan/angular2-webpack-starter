@@ -15,6 +15,9 @@ import { timeInterval } from "rxjs/operator/timeInterval";
 export class SelfTileComponent implements OnInit, OnDestroy {
 	private disposables: Subscription;
 	@Input()
+	public tileId: number;
+	public serverTileId: number;
+	@Input()
 	public displayName: string = 'NA';
 	@Input()
 	public streamType: string = 'worker1';
@@ -44,11 +47,12 @@ export class SelfTileComponent implements OnInit, OnDestroy {
 
 				});
 		} else {
-			this.disposables = this.priceService.getPrices$()
+			this.disposables = this.priceService.getTilePrice$(this.tileId)
 				.timeInterval()
 				.subscribe((x)=> {
+					this.serverTileId = x.value.tileId;
 					this.price1 = x.interval.toString();
-					this.price2 = x.value.toFixed(2);
+					this.price2 = x.value.price;
 				});
 		}
 

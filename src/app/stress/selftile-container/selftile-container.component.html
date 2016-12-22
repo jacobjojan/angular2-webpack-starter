@@ -12,7 +12,7 @@
 	        color="primary">Stop
 	</button>-->
 	<button md-button
-	        (click)="addPair()"
+	        (click)="addAllPairs()"
 	        color="primary">Add all pairs
 	</button>
 	<button md-button
@@ -32,6 +32,7 @@
 
 	<div class="container">
 		<self-tile *ngFor="let selectedPair of state.selectedPairs"
+				   [tileId]="selectedPair.tileId"
 		           [streamType]="selectedPair.streamType"
 		           [displayName]="selectedPair.key">
 		</self-tile>

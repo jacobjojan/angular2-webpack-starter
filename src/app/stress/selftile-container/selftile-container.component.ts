@@ -11,27 +11,29 @@ import { AppState } from "../../app.service";
 	           selector: 'self-tile-container',
 	           templateUrl: './selftile-container.component.html',
 	           styleUrls: ['./selftile-container.component.css'],
-	           changeDetection : ChangeDetectionStrategy.OnPush
+	           changeDetection: ChangeDetectionStrategy.OnPush
            })
 export class SelfTileContainerComponent implements OnInit, OnDestroy {
 
 	currencyPairs: Array<string>;
 	state: any = {selectedPairs: []};
 	randomNumbers: Observable<number>;
-	disposables: Subscription;
+	disposable: Subscription;
 	selectedPairs: Array<any>;
 	isWorker: boolean;
 	//state: Object;
-	frequency: number = 50;
+	private frequency: number = 50;
+	private tileId: number = 0;
 
-	constructor(private  priceService: PriceService, private appState: AppState, private cd: ChangeDetectorRef) {
+	constructor(private  priceService: PriceService, private appState: AppState,
+	            private cd: ChangeDetectorRef) {
 
 
 		this.state = this.appState.get();
 
-		if(!this.state.hasOwnProperty('selectedPairs')){
+		if (!this.state.hasOwnProperty('selectedPairs')) {
 			this.state = {
-				selectedPairs : []
+				selectedPairs: []
 			};
 			this.appState.set('selectedPairs', this.state.selectedPairs);
 		}
@@ -49,13 +51,7 @@ export class SelfTileContainerComponent implements OnInit, OnDestroy {
 		this.state = this.appState.get();
 
 		if (this.state.selectedPairs.length == 0) {
-
-			this.state.selectedPairs.push({
-				                        key: 'USD EUR'
-			                        });
-
-			this.appState.set('selectedPairs', this.state.selectedPairs);
-
+			this.addPair('USD EUR');
 		}
 	}
 
@@ -71,40 +67,49 @@ export class SelfTileContainerComponent implements OnInit, OnDestroy {
 		console.log('start pressed');
 	}
 
+	public getNextTileId() {
+		return ++this.tileId;
+	}
+
 	public startWorker() {
 
 	}
 
 	stop() {
-		if(this.disposables) {
-			this.disposables.unsubscribe();
+		if (this.disposable) {
+			this.disposable.unsubscribe();
 		}
 		this.priceService.stopWorkerPrices();
 	}
 
-	addPair(selectedPair) {
-		//for (let i = 0; i < 10; i++) {
-		if (!selectedPair) {
-			this.currencyPairs.forEach((pair)=> {
-				this.state.selectedPairs.push({
-					                              key: pair,
-					                              streamType: this.isWorker ? 'worker' :'rx'
-				                              });
-			});
-		} else {
-			this.state.selectedPairs.push({
-				                              key: selectedPair,
-				                              streamType: this.isWorker ? 'worker' : 'rx'
-			                              });
-		}
+	addAllPairs() {
+		this.currencyPairs.forEach( pair => {
+			let t = this.getNewTile(pair);
+			this.state.selectedPairs.push(t);
+			this.priceService.addTile(t.tileId);
+		});
 		this.appState.set('selectedPairs', this.state.selectedPairs);
-
-
 	}
 
-	clearAll(){
+	addPair(selectedPair) {
+		let t = this.getNewTile(selectedPair);
+		this.state.selectedPairs.push(t);
+		this.priceService.addTile(t.tileId);
+		this.appState.set('selectedPairs', this.state.selectedPairs);
+	}
+
+	getNewTile(selectedPair) {
+		return {
+			tileId: this.getNextTileId(),
+			key: selectedPair,
+			streamType: this.isWorker ? 'worker' : 'rx'
+		}
+	}
+
+	clearAll() {
 		this.stop();
 		this.state.selectedPairs = [];
+		this.priceService.resetTiles();
 		this.appState.set('selectedPairs', this.state.selectedPairs);
 	}
 
