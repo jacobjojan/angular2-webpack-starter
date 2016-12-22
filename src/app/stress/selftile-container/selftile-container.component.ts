@@ -105,5 +105,13 @@ export class SelfTileContainerComponent implements OnInit, OnDestroy {
 			streamType: this.isWorker ? 'worker' : 'rx'
 		}
 	}
+
+	clearAll() {
+		this.stop();
+		this.state.selectedPairs = [];
+		this.tileId = 0;
+		this.priceService.resetTiles();
+		this.appState.set('selectedPairs', this.state.selectedPairs);
+	}
 }
 
