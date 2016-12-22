@@ -1,22 +1,20 @@
 <md-toolbar color="primary">
 	<span>Marquee Trader Angular Demo 2</span>
-
+	<nav>
+		<button md-button
+				color=""
+				[routerLink]=" ['./stress'] ">
+			Subscribing Tiles
+		</button>
+		|
+		<button md-button
+				color=""
+				[routerLink]=" ['./about'] ">
+			About
+		</button>
+	</nav>
 </md-toolbar>
-<br>
 
-<nav>
-	<button md-raised-button
-	        color="primary"
-	        [routerLink]=" ['./stress'] ">
-		Subscribing Tiles
-	</button>
-	|
-	<button md-raised-button
-			color="warn"
-			[routerLink]=" ['./about'] ">
-		About
-	</button>
-</nav>
 <br>
 
 <main>
