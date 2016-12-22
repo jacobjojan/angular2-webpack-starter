@@ -10,9 +10,8 @@
 		{{ currencyPair }}
 	</button>
 	<md-checkbox [(ngModel)]="isWorker">Is Worker</md-checkbox>
-
-	<label>Total Tiles : {{ state.selectedPairs.length }}</label> <label>Update frequency:
-	{{ frequency }} ms</label>
+	<label> || Tiles : {{ state.selectedPairs.length }}</label>
+	<label> || Frequency: {{ frequency }} ms</label>
 
 	<div class="container">
 		<self-tile *ngFor="let selectedPair of state.selectedPairs"

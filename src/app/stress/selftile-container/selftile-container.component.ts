@@ -51,7 +51,7 @@ export class SelfTileContainerComponent implements OnInit, OnDestroy {
 			}, 50);
 		});
 
-		this.currencyPairs = ['USD EUR', 'USD JPY', 'GBP USD', 'USD CAD'];
+		this.currencyPairs = ['USD EUR', 'USD JPY'];
 
 		this.state = this.appState.get();
 
