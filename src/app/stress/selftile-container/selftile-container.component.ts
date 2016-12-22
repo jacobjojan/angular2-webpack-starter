@@ -1,6 +1,6 @@
 import {
 	Component, OnInit, OnDestroy, ChangeDetectionStrategy,
-	ChangeDetectorRef, NgZone
+	ChangeDetectorRef, Input, NgZone
 } from "@angular/core";
 import { Subscription } from 'rxjs';
 import { PriceService } from "../price.service";
@@ -19,16 +19,25 @@ export class SelfTileContainerComponent implements OnInit, OnDestroy {
 	state: any = {selectedPairs: []};
 	disposable: Subscription;
 	selectedPairs: Array<any>;
-	isWorker: boolean;
+	_isWorker: boolean = false;
 	private frequency: number = 50;
 	private tileId: number = 0;
+
+	@Input()
+	set isWorker(isWorker:boolean) {
+		console.log('isWorker setter called with '+isWorker);
+		this._isWorker = isWorker;
+	}
+
+	get isWorker(): boolean {
+		return this._isWorker;
+	}
 
 	constructor(private  priceService: PriceService,
 	            private appState: AppState,
 	            private cd: ChangeDetectorRef,
 				private zone: NgZone) {
-
-
+		
 		this.state = this.appState.get();
 
 		if (!this.state.hasOwnProperty('selectedPairs')) {
