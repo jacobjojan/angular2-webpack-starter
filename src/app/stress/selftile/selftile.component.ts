@@ -33,12 +33,12 @@ export class SelfTileComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		//this.priceService.subscribePrice(this.displayName);
-		console.log('start pressed');
+		console.log('start pressed for tileId = '+this.tileId);
 		this.currency1 = this.displayName.split(' ')[0];
 		this.currency2 = this.displayName.split(' ')[1];
 
 		if (this.streamType === 'worker') {
-			console.log('start pressed');
+			// console.log('start pressed');
 			this.disposables =
 				this.priceService.getWorkerPrices$()
 					.subscribe((e: MessageEvent)=> {
@@ -53,7 +53,8 @@ export class SelfTileComponent implements OnInit, OnDestroy {
 					this.serverTileId = x.value.tileId;
 					this.price1 = x.interval.toString();
 					this.price2 = x.value.price;
-				});
+				})
+			;
 		}
 
 		//this.cd.detach();

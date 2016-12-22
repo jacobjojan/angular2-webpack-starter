@@ -51,7 +51,8 @@ export class PriceService {
 			tileId: x,
 			price: (Math.random() * 100).toFixed(2)
 		}))
-		.share();
+		.publish().refCount();
+		// .share();
 
 
 	constructor() {
@@ -66,19 +67,18 @@ export class PriceService {
 
 		console.log('PriceService created here!!!!');
 
-
 		this.ticks$.subscribe(
-			val => console.log('tileId = ' + val.tileId + ' price = ' + val.price)
+			// val => console.log('tileId = ' + val.tileId + ' price = ' + val.price)
 		);
-
-
 	}
 
 	public getTilePrice$(tileId): Observable<any> {
+		console.log('getTilePrice$ tileId = '+tileId);
 		return this.ticks$.filter( tileUpdate => tileUpdate.tileId === tileId );
 	}
 
 	public addTile(tileId) : void {
+		console.log('addTile tileId = '+tileId);
 		this.addTileSubject$.next(tileId);
 	}
 

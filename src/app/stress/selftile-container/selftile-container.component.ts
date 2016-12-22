@@ -17,11 +17,9 @@ export class SelfTileContainerComponent implements OnInit, OnDestroy {
 
 	currencyPairs: Array<string>;
 	state: any = {selectedPairs: []};
-	randomNumbers: Observable<number>;
 	disposable: Subscription;
 	selectedPairs: Array<any>;
 	isWorker: boolean;
-	//state: Object;
 	private frequency: number = 50;
 	private tileId: number = 0;
 
