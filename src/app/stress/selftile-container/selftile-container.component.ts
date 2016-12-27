@@ -52,13 +52,13 @@ export class SelfTileContainerComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 
 		//Change proposed by google
-		this.cd.detach();
+/*		this.cd.detach();
 		this.zone.runOutsideAngular(()=> {
 			setInterval(() => {
 				this.cd.markForCheck();
 				this.cd.detectChanges();
 			}, 50);
-		});
+		});*/
 
 		this.currencyPairs = ['USD EUR', 'USD JPY'];
 
