@@ -37,7 +37,7 @@ export class RandomPriceWorker {
 
 	public resetTiles(): void {
 		// console.log('PriceWorker resetTiles');
-		this.addTilesSubject$.next(0);
+		this.resetTilesSubject$.next();
 	}
 
 	public startTicksSubscription() {

@@ -17,7 +17,6 @@ export class SelfTileContainerComponent implements OnInit, OnDestroy {
 
 	currencyPairs: Array<string>;
 	state: any = {selectedPairs: Array<TileModel>()};
-	disposable: Subscription;
 	selectedPairs: Array<any>;
 	_isWorker: boolean = false;
 	private frequency: number = 50;
@@ -75,7 +74,7 @@ export class SelfTileContainerComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		this.stop();
+		this.clearAll();
 	}
 
 	/**
@@ -89,15 +88,8 @@ export class SelfTileContainerComponent implements OnInit, OnDestroy {
 		return ++this.tileId;
 	}
 
-	stop() {
-		if (this.disposable && this.disposable.unsubscribe) {
-			this.disposable.unsubscribe();
-		}
-		this.priceService.stopWorker();
-	}
-
 	addPairs(numberToAdd) {
-		for(let i=0; i <= numberToAdd; i++){
+		for (let i = 0; i < numberToAdd; i++) {
 			let t: TileModel = this.getNewTile(this.currencyPairs[0]);
 			this.state.selectedPairs.push(t);
 			this.priceService.addTile(t.tileId);
@@ -117,7 +109,6 @@ export class SelfTileContainerComponent implements OnInit, OnDestroy {
 	}
 
 	clearAll() {
-		this.stop();
 		this.state.selectedPairs = Array<TileModel>();
 		this.tileId = 0;
 		this.priceService.resetTiles();
