@@ -1,21 +1,55 @@
 //RxJS
-import { Observable } from "rxjs";
+import { Observable, Subject, Subscription } from "rxjs";
+import { PriceUpdate } from '../app/stress/price.model';
+import { PriceHelper } from "../app/stress/price-helper";
 
-export class DummyPriceWorker{
-	randomPrices$: Observable<number>;
-	currencyPairs:Array<string>;
+export class RandomPriceWorker {
+	private ticksSubscription: Subscription;
+	private addTilesSubject$ = new Subject<number>();
+	private resetTilesSubject$ = new Subject();
+	private tileCount$: Observable<number> = PriceHelper.getTileCount$(
+		this.addTilesSubject$,
+		this.resetTilesSubject$,
+		'PriceWorker'
+	);
+	public ticks$: Observable<PriceUpdate> = PriceHelper.getTicks$(this.tileCount$,
+	                                                               'PriceWorker');
 
-	constructor(){
-		this.currencyPairs = ['USD EUR', 'USD JPY', 'GBP USD', 'USD CAD'];
-
-		this.randomPrices$ = Observable.interval(50);
-			/*.range(1, 10000)
-			.concatMap(function (x) {
-				return Observable.of(x).delay(50)
-			});*/
+	constructor() {
+		console.log('PriceWorker created.');
+		this.startTicksSubscription();
 	}
 
-	getPrices$() : Observable<number> {
-		return this.randomPrices$;
+	public getTilePrice$(tileId: number): Observable<PriceUpdate> {
+		// console.log('PriceWorker getTilePrice$ tileId = ' + tileId);
+		return this.ticks$.filter(tileUpdate => tileUpdate.tileId === tileId);
 	}
+
+	public addTiles(numTilesToAdd: number): void {
+		// console.log('PriceWorker addTiles numTilesToAdd = ' + numTilesToAdd);
+		this.addTilesSubject$.next(numTilesToAdd);
+	}
+
+	public addTile(tileId: number): void {
+		// console.log('PriceWorker addTile tileId = ' + tileId);
+		this.addTilesSubject$.next(1);
+	}
+
+	public resetTiles(): void {
+		// console.log('PriceWorker resetTiles');
+		this.addTilesSubject$.next(0);
+	}
+
+	public startTicksSubscription() {
+		this.ticksSubscription = this.ticks$.subscribe(
+			// x => console.log('PriceWorker ticks$ ' + JSON.stringify(x))
+		);
+	}
+
+	public stopTicksSubscription() {
+		if (this.ticksSubscription && this.ticksSubscription.unsubscribe) {
+			this.ticksSubscription.unsubscribe();
+		}
+	}
+
 }
