@@ -1,29 +1,43 @@
 //https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers
-import { DummyPriceWorker } from './dummyPrice.worker'
+import { RandomPriceWorker } from './dummyPrice.worker'
+import { Subscription } from "rxjs";
 
-let disposible;
+let disposable: Subscription;
 
-const dummyPriceWorker = new DummyPriceWorker();
-
+const randomPriceWorker = new RandomPriceWorker();
 
 onmessage = (e: MessageEvent) => {
+	console.log(
+		'Worker command '+ e.data.command +
+		(e.data.params ? ', params[0] ' + e.data.params[0] : '')
+	);
 
-	//As we have only one case here...
 	switch (e.data.command) {
-
 		case 'start':
-			if (!disposible) {
-				disposible = dummyPriceWorker.getPrices$()
-					.subscribe(price => { (<any>postMessage)(price); });
+			randomPriceWorker.startTicksSubscription();
+			randomPriceWorker.addTiles(e.data.params[0]);
+			if(disposable && disposable.unsubscribe){
+				disposable.unsubscribe();
 			}
+			disposable = randomPriceWorker.ticks$
+				// .do( x => console.log('WorkerSetup ticks$ do ' + JSON.stringify(x)))
+				.subscribe(
+					priceUpdate => { (<any>postMessage)(priceUpdate); }
+				);
 			break;
 		case 'stop':
-			if(disposible && disposible.unsubscribe){
-				disposible.unsubscribe();
+			randomPriceWorker.stopTicksSubscription();
+			randomPriceWorker.resetTiles();
+			if(disposable && disposable.unsubscribe){
+				disposable.unsubscribe();
 			}
 			break;
 		case 'add':
-
-
+			randomPriceWorker.addTiles(e.data.params[0]);
+			break;
+		case 'reset':
+			randomPriceWorker.resetTiles();
+			break;
 	}
-}
+
+};

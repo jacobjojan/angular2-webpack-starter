@@ -4,6 +4,7 @@ import {
 } from '@angular/core';
 import { PriceService } from "../price.service";
 import { Subscription } from "rxjs";
+import { TileModel } from "../price.model";
 import 'rxjs/add/operator/timeInterval';
 
 @Component({
@@ -13,60 +14,35 @@ import 'rxjs/add/operator/timeInterval';
 	           changeDetection: ChangeDetectionStrategy.OnPush
            })
 export class SelfTileComponent implements OnInit, OnDestroy {
-	private disposables: Subscription;
+	private tileSubscription: Subscription;
 	@Input()
-	public tileId: number;
-	public serverTileId: number;
-	@Input()
-	public displayName: string = 'NA';
-	@Input()
-	public streamType: string = 'worker1';
-	public currency1: string = 'NA';
-	public currency2: string = 'NA';
+	public model: TileModel;
+	public interval: number;
 
-	public price1: string;
-	public price2: string;
-
-	constructor(private priceService: PriceService, private cd: ChangeDetectorRef, private zone: NgZone) {
+	constructor(private priceService: PriceService, private cd: ChangeDetectorRef,
+	            private zone: NgZone) {
 		cd.detach();
 	}
 
 	ngOnInit() {
-		//this.priceService.subscribePrice(this.displayName);
-		console.log('start pressed for tileId = '+this.tileId);
-		this.currency1 = this.displayName.split(' ')[0];
-		this.currency2 = this.displayName.split(' ')[1];
+		console.log('Tile component created for tileId = ' + this.model.tileId);
 
-		this.zone.runOutsideAngular(()=> {
-			if (this.streamType === 'worker') {
-				// console.log('start pressed');
-				this.disposables =
-					this.priceService.getWorkerPrices$()
-						.subscribe((e: MessageEvent)=> {
-							this.price1 = (Math.random() * 100).toFixed(2);
-							this.price2 = (Math.random() * 100).toFixed(2);
-							this.cd.markForCheck();
-							this.cd.detectChanges();
-						});
-			} else {
-				this.disposables = this.priceService.getTilePrice$(this.tileId)
-					.timeInterval()
-					.subscribe((x)=> {
-						this.serverTileId = x.value.tileId;
-						this.price1 = x.interval.toString();
-						this.price2 = x.value.price;
-						this.cd.markForCheck();
-						this.cd.detectChanges();
-					})
-				;
-			}
+		this.zone.runOutsideAngular(() => {
+			this.tileSubscription = this.priceService.getTilePrice$(this.model.tileId)
+				.timeInterval()
+				.subscribe((x) => {
+					this.interval = x.interval;
+					this.model.updatePrice(x.value);
+					this.cd.markForCheck();
+					this.cd.detectChanges();
+				});
 		});
-
 	}
 
 	ngOnDestroy() {
-		this.disposables.unsubscribe();
+		if (this.tileSubscription && this.tileSubscription.unsubscribe){
+			this.tileSubscription.unsubscribe();
+		}
 	}
-
 
 }

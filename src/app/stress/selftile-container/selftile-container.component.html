@@ -1,16 +1,16 @@
 <div>
 	<button md-button
-	        (click)="addPairs(10)"
-	        color="primary">Add 10 Tiles
+			(click)="addPairs(100)"
+			color="primary">Add 100 Tiles
 	</button>
 	<button md-button
 			(click)="clearAll()"
 			color="primary">Clear
 	</button>
 	<button *ngFor="let currencyPair of currencyPairs"
-	        md-button
-	        (click)="addPair(currencyPair)"
-	        color="primary">
+			md-button
+			(click)="addPair(currencyPair)"
+			color="primary">
 		{{ currencyPair }}
 	</button>
 	<md-checkbox [(ngModel)]="isWorker">Is Worker</md-checkbox>
@@ -18,10 +18,7 @@
 	<label> || Frequency: {{ frequency }} ms</label>
 
 	<div class="container">
-		<self-tile *ngFor="let selectedPair of state.selectedPairs"
-				   [tileId]="selectedPair.tileId"
-		           [streamType]="selectedPair.streamType"
-		           [displayName]="selectedPair.key">
-		</self-tile>
+		<self-tile *ngFor="let selectedPair of state.selectedPairs;trackBy:tileIdTrackFn"
+				   [model]="selectedPair"></self-tile>
 	</div>
 </div>

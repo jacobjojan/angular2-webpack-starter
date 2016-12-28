@@ -1,5 +1,6 @@
+import { PriceUpdate } from './price.model';
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from "rxjs";
+import { Observable, Subject, BehaviorSubject, Subscription } from "rxjs";
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/observable/interval';
@@ -8,101 +9,127 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/scan';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/share';
-
+import 'rxjs/add/operator/publish';
+import { PriceHelper } from './price-helper';
 
 @Injectable()
 export class PriceService {
-	currencyPairs: Array<string>;
-	workerPrices$: Observable<any>;
+	private ticksSubscription: Subscription;
+	private workerPrices$: Observable<any>;
 	private worker: Worker;
-	private workerInitialized: boolean;
-	private addTileSubject$ = new Subject();
-	private removeTileSubject$ = new Subject();
+	private lastTileCount: number;
+	private workerInitialized: boolean = false;
+	public isWorkerEnabled$ = new BehaviorSubject(this.workerInitialized);
+	private addTilesSubject$ = new Subject();
 	private resetTilesSubject$ = new Subject();
-	private tileCount$ = Observable.merge(
-		// decrement
-		this.removeTileSubject$.asObservable()
-			.map(function () {
-				return {delta: -1, reset: false};
-			}),
-
-		// increment
-		this.addTileSubject$.asObservable()
-			.map(function () {
-				return {delta: +1, reset: false};
-			}),
-
-		// reset
-		this.resetTilesSubject$.asObservable()
-			.map(function () {
-				return {delta: 0, reset: true};
-			})
-	).scan(function (acc, value) {
-		return value.reset ? 0 : acc + value.delta;
-	}, 0);
-
-	public ticks$ = this.tileCount$
-		.switchMap((tileCount, i) => (
-			Observable.interval(50)
-				.flatMap(() => Observable.range(1, tileCount)))
-		)
-		.map((x, i) => ({
-			tileId: x,
-			price: (Math.random() * 100).toFixed(2)
-		}))
-		.publish().refCount();
+	private tileCount$: Observable<number> = PriceHelper.getTileCount$(
+		this.addTilesSubject$,
+		this.resetTilesSubject$,
+		'PriceService'
+	);
+	public ticks$: Observable<PriceUpdate> = PriceHelper.getTicks$(this.tileCount$,
+	                                                               'PriceService');
 
 	constructor() {
-		this.currencyPairs = ['USD EUR', 'USD JPY', 'GBP USD', 'USD CAD'];
-
-		this.workerInitialized = false;
-
+		console.log('PriceService created');
 		this.initWorker();
+		this.tileCount$.subscribe(lastTileCount => {
+			this.lastTileCount = lastTileCount;
+		});
 
-		console.log('PriceService created here!!!!');
-
-		this.ticks$.subscribe(
-			// val => console.log('tileId = ' + val.tileId + ' price = ' + val.price)
-		);
+		this.isWorkerEnabled$.subscribe((x) => {
+			// console.debug('PriceService isWorkerEnabled$ = ' + x +
+			//             ' lastTileCount = ' + this.lastTileCount);
+			if (x) {
+				this.stopTicksSubscription();
+				this.startWorker(this.lastTileCount);
+			} else {
+				this.startTicksSubscription();
+				this.stopWorker();
+			}
+		});
 	}
 
-	public getTilePrice$(tileId): Observable<any> {
-		console.log('getTilePrice$ tileId = '+tileId);
-		return this.ticks$.filter( tileUpdate => tileUpdate.tileId === tileId );
+	public getTilePrice$(tileId: number): Observable<PriceUpdate> {
+		// console.log('PriceService getTilePrice$ tileId = ' + tileId);
+
+		let svc = this;
+		return this.isWorkerEnabled$.switchMap((x) => {
+			if (x) {
+				// console.debug('PriceService getTilePrice$ switching to worker');
+				return svc.workerPrices$.map(msg => msg.data);
+			} else {
+				// console.debug('PriceService getTilePrice$ switching to non-worker');
+				return svc.ticks$;
+			}
+		})
+		.filter(tileUpdate => tileUpdate.tileId === tileId);
 	}
 
-	public addTile(tileId) : void {
-		console.log('addTile tileId = '+tileId);
-		this.addTileSubject$.next(tileId);
+	public addTile(tileId: number): void {
+		this.addTilesSubject$.next(tileId);
+
+		if (this.isWorkerEnabled$.getValue()) {
+			console.log('PriceService addTile to worker tileId = ' + tileId);
+			this.worker.postMessage({command: 'add', params: [tileId]});
+		} else {
+			console.log('PriceService addTile to in-memory tileId = ' + tileId);
+		}
 	}
 
-	public removeTile(tileId) : void {
-		this.removeTileSubject$.next(tileId);
-	}
-
-	public resetTiles() : void {
+	public resetTiles(): void {
 		this.resetTilesSubject$.next();
+		if (this.isWorkerEnabled$.getValue()) {
+			this.worker.postMessage({command: 'reset', params: []});
+		}
 	}
 
-	public getWorkerPrices$(): Observable<any> {
-
-		this.worker.postMessage({command: 'start'});
-		return this.workerPrices$
+	public startWorker(lastTileCount: number): void {
+		if (!this.workerInitialized) {
+			console.log('PriceService starting worker with tileId = ' + lastTileCount);
+			this.worker.postMessage({command: 'start', params: [lastTileCount]});
+			this.workerInitialized = true;
+		}
+		else {
+			console.warn('PriceService startWorker cannot start worker since its already initialized');
+		}
 	}
 
-	public stopWorkerPrices(): void {
-		this.worker.postMessage({command: 'stop'});
+	public stopWorker(): void {
+		if (this.workerInitialized) {
+			console.log('PriceService stopping worker');
+			this.worker.postMessage({command: 'stop'});
+			this.workerInitialized = false;
+		} else {
+			console.debug('PriceService stopWorker cannot stop worker since its not initialized');
+		}
 	}
 
-	public subscribePrice(crossKey: string): void {
-		this.worker.postMessage({command: 'subscribe', params: [crossKey]});
+	public toggleWorker(enable): void {
+		console.log('PriceService toggle worker = '+enable);
+		this.isWorkerEnabled$.next(enable);
 	}
 
 	private initWorker(): void {
 		if (!this.workerInitialized) {
+			console.log('PriceService initWorker');
 			this.worker = new Worker('../../workers/worker.js');
 			this.workerPrices$ = Observable.fromEvent(this.worker, 'message');
-			this.workerInitialized = true;
+			console.log('PriceService initWorker initialized');
+		} else {
+			console.warn('PriceService initWorker cannot initWorker since its already initialized');
+		}
+	}
+
+	private startTicksSubscription() {
+		this.ticksSubscription = this.ticks$.subscribe(
+			// x => console.log(x)
+		);
+	}
+
+	private stopTicksSubscription() {
+		if (this.ticksSubscription && this.ticksSubscription.unsubscribe) {
+			this.ticksSubscription.unsubscribe();
 		}
 	}
 }

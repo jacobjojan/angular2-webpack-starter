@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 export type InternalStateType = {
-  [key: string]: any
+  [tileId: string]: any
 };
 
 @Injectable()
