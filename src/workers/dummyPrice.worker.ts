@@ -16,7 +16,6 @@ export class RandomPriceWorker {
 	                                                               'PriceWorker');
 
 	constructor() {
-		console.log('PriceWorker created.');
 		this.startTicksSubscription();
 	}
 

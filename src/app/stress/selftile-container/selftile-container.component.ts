@@ -39,7 +39,7 @@ export class SelfTileContainerComponent implements OnInit, OnDestroy {
 
 	@Input()
 	set isWorker(isWorker: boolean) {
-		console.log('isWorker setter called with ' + isWorker);
+		// console.log('isWorker setter called with ' + isWorker);
 		this.clearAll();
 		this._isWorker = isWorker;
 		this.priceService.toggleWorker(isWorker);
@@ -56,13 +56,13 @@ export class SelfTileContainerComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 
 		//Change proposed by google
-/*		this.cd.detach();
-		this.zone.runOutsideAngular(() => {
-			setInterval(() => {
-				this.cd.markForCheck();
-				this.cd.detectChanges();
-			}, 50);
-		});*/
+		/*		this.cd.detach();
+		 this.zone.runOutsideAngular(() => {
+		 setInterval(() => {
+		 this.cd.markForCheck();
+		 this.cd.detectChanges();
+		 }, 50);
+		 });*/
 
 		this.currencyPairs = ['EUR USD', 'CAD AUD'];
 
@@ -80,9 +80,7 @@ export class SelfTileContainerComponent implements OnInit, OnDestroy {
 	/**
 	 * Function to start the price
 	 */
-	start() {
-		console.log('start pressed');
-	}
+	start() {}
 
 	public getNextTileId() {
 		return ++this.tileId;
