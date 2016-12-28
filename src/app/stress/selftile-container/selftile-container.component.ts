@@ -89,11 +89,15 @@ export class SelfTileContainerComponent implements OnInit, OnDestroy {
 	}
 
 	addPairs(numberToAdd) {
+		let maxTileId = 0;
 		for (let i = 0; i < numberToAdd; i++) {
 			let t: TileModel = this.getNewTile(this.currencyPairs[0]);
 			this.state.selectedPairs.push(t);
-			this.priceService.addTile(t.tileId);
+			if (i === numberToAdd - 1){
+				maxTileId = t.tileId;
+			}
 		}
+		this.priceService.addTile(maxTileId);
 		this.appState.set('selectedPairs', this.state.selectedPairs);
 	}
 
