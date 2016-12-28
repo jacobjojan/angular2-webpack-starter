@@ -11,7 +11,7 @@ import 'rxjs/add/operator/timeInterval';
 	           selector: 'self-tile',
 	           templateUrl: './selftile.component.html',
 	           styleUrls: ['./selftile.component.css'],
-	           changeDetection: ChangeDetectionStrategy.OnPush
+	           changeDetection: ChangeDetectionStrategy.Default
            })
 export class SelfTileComponent implements OnInit, OnDestroy {
 	private tileSubscription: Subscription;
@@ -33,7 +33,7 @@ export class SelfTileComponent implements OnInit, OnDestroy {
 				.subscribe((x) => {
 					this.interval = x.interval;
 					this.model.updatePrice(x.value);
-					this.cd.markForCheck();
+					//this.cd.markForCheck();
 					this.cd.detectChanges();
 				});
 		});

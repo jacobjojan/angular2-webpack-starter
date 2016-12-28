@@ -86,9 +86,9 @@ export class PriceService {
 
 	public startWorker(lastTileCount: number): void {
 		if (!this.workerInitialized) {
+			this.workerInitialized = true;
 			console.log('PriceService starting worker with tileId = ' + lastTileCount);
 			this.worker.postMessage({command: 'start', params: [lastTileCount]});
-			this.workerInitialized = true;
 		}
 		else {
 			console.warn('PriceService startWorker cannot start worker since its already initialized');
@@ -114,7 +114,7 @@ export class PriceService {
 		if (!this.workerInitialized) {
 			console.log('PriceService initWorker');
 			this.worker = new Worker('../../workers/worker.js');
-			this.workerPrices$ = Observable.fromEvent(this.worker, 'message');
+			this.workerPrices$ = Observable.fromEvent(this.worker, 'message').publish().refCount();
 			console.log('PriceService initWorker initialized');
 		} else {
 			console.warn('PriceService initWorker cannot initWorker since its already initialized');
