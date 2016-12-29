@@ -25,15 +25,13 @@ export class SelfTileComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-		console.log('Tile component created for tileId = ' + this.model.tileId);
-
+		// console.log('Tile component created for tileId = ' + this.model.tileId);
 		this.zone.runOutsideAngular(() => {
 			this.tileSubscription = this.priceService.getTilePrice$(this.model.tileId)
 				.timeInterval()
 				.subscribe((x) => {
 					this.interval = x.interval;
 					this.model.updatePrice(x.value);
-					//this.cd.markForCheck();
 					this.cd.detectChanges();
 				});
 		});

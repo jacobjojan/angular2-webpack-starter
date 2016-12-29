@@ -5,7 +5,14 @@
 		<button md-button
 				color=""
 				[routerLink]=" ['./stress'] ">
-			Subscribing Tiles
+				Empty
+		</button>
+		|
+		<button md-button
+				color=""
+				[routerLink]="['./stress'] "
+				[queryParams]="{initialQuantity: 100}">
+			Loaded
 		</button>
 		|
 		<button md-button
