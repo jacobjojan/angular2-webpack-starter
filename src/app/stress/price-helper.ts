@@ -26,28 +26,23 @@ export class PriceHelper {
 			// reset
 			resetTilesSubject$.asObservable()
 				.map(function () {
-					// console.log(tag + ' resetTilesSubject$');
 					return {num: 0, reset: true};
 				})
 		)
-			.scan((acc, value) => {
-				return value.reset ? 0 : value.num;
-			}, 0);
-		// .do(x => console.log(tag + ' tileCount$ do ' + x));
+		.scan((acc, value) => {
+			return value.reset ? 0 : value.num;
+		}, 0);
 	}
 
 	public static getTicks$(tileCount$: Observable<number>,
 	                        tag: string): Observable<PriceUpdate> {
 		return tileCount$
 			.switchMap((tileCount: number, i: number) => {
-				// console.log(tag + ' ticks$ tileCount = ' + tileCount);
 				return Observable.interval(50).flatMap(() => {
 					return Observable.range(1, tileCount);
 				});
 			})
-			.map(
-				(tileId: number) => new PriceUpdate(tileId, (Math.random() * 100).toFixed(2)))
-			// .do(x => console.log(tag + ' ticks$ do ' + JSON.stringify(x)))
+			.map((tileId: number) => new PriceUpdate(tileId, (Math.random() * 100).toFixed(2)))
 			.publish().refCount();
 	}
 

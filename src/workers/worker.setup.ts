@@ -7,10 +7,10 @@ let disposable: Subscription;
 const randomPriceWorker = new RandomPriceWorker();
 
 onmessage = (e: MessageEvent) => {
-	console.log(
-		'Worker command '+ e.data.command +
-		(e.data.params ? ', params[0] ' + e.data.params[0] : '')
-	);
+	// console.log(
+	// 	'Worker command '+ e.data.command +
+	// 	(e.data.params ? ', params[0] ' + e.data.params[0] : '')
+	// );
 
 	switch (e.data.command) {
 		case 'start':

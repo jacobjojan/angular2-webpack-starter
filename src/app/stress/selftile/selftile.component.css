@@ -4,6 +4,8 @@ md-card {
 	max-width: 150px;
 	margin: 10px;
 	padding: 5px 15px;
+	min-height: 83px;
+	min-width: 142px;
 }
 
 md-card .tile-sell{

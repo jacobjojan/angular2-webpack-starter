@@ -1,11 +1,11 @@
 import {
-	Component, OnInit, OnDestroy, ChangeDetectionStrategy,
-	ChangeDetectorRef, Input, NgZone
+	Component, OnDestroy, ChangeDetectionStrategy,
+	ChangeDetectorRef, Input, NgZone, AfterContentInit, OnInit, AfterViewInit
 } from "@angular/core";
-import { Subscription } from 'rxjs';
 import { PriceService } from "../price.service";
 import { AppState } from "../../app.service";
 import { TileModel } from '../price.model';
+import { Subscription } from "rxjs";
 
 @Component({
 	           selector: 'self-tile-container',
@@ -13,11 +13,12 @@ import { TileModel } from '../price.model';
 	           styleUrls: ['./selftile-container.component.css'],
 	           changeDetection: ChangeDetectionStrategy.OnPush
            })
-export class SelfTileContainerComponent implements OnInit, OnDestroy {
-
+export class SelfTileContainerComponent implements OnInit, AfterViewInit, OnDestroy {
+	@Input()
+	initialQuantity: number = 0;
+	initTime: number = 0;
 	currencyPairs: Array<string>;
 	state: any = {selectedPairs: Array<TileModel>()};
-	disposable: Subscription;
 	selectedPairs: Array<any>;
 	_isWorker: boolean = false;
 	private frequency: number = 50;
@@ -35,12 +36,13 @@ export class SelfTileContainerComponent implements OnInit, OnDestroy {
 			};
 			this.appState.set('selectedPairs', this.state.selectedPairs);
 		}
-
+		this.currencyPairs = ['EUR USD', 'CAD AUD'];
+		this.state = this.appState.get();
 	}
 
 	@Input()
 	set isWorker(isWorker: boolean) {
-		console.log('isWorker setter called with ' + isWorker);
+		// console.log('isWorker setter called with ' + isWorker);
 		this.clearAll();
 		this._isWorker = isWorker;
 		this.priceService.toggleWorker(isWorker);
@@ -55,54 +57,47 @@ export class SelfTileContainerComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
+		console.log('SelfTile Container initial quantity = ' + this.initialQuantity);
+		this.initTime = window.performance.now();
+		this.addPairs(this.initialQuantity);
 
-		//Change proposed by google
-/*		this.cd.detach();
-		this.zone.runOutsideAngular(() => {
-			setInterval(() => {
-				this.cd.markForCheck();
-				this.cd.detectChanges();
-			}, 50);
-		});*/
+		//// Change proposed by google
+		// this.cd.detach();
+		// this.zone.runOutsideAngular(() => {
+		// 	setInterval(() => {
+		// 		this.cd.markForCheck();
+		// 		this.cd.detectChanges();
+		// 	}, 50);
+		// });
+	}
 
-		this.currencyPairs = ['EUR USD', 'CAD AUD'];
-
-		this.state = this.appState.get();
-
-		if (this.state.selectedPairs.length == 0) {
-			// this.addPair(this.currencyPairs[0]);
-		}
+	ngAfterViewInit(): void {
+		let loadTime = (window.performance.now() - this.initTime);
+		console.log('load time = ' + loadTime + ' ms');
 	}
 
 	ngOnDestroy(): void {
-		this.stop();
-	}
-
-	/**
-	 * Function to start the price
-	 */
-	start() {
-		console.log('start pressed');
+		this.clearAll();
 	}
 
 	public getNextTileId() {
 		return ++this.tileId;
 	}
 
-	stop() {
-		if (this.disposable && this.disposable.unsubscribe) {
-			this.disposable.unsubscribe();
-		}
-		this.priceService.stopWorker();
-	}
-
 	addPairs(numberToAdd) {
-		for(let i=0; i <= numberToAdd; i++){
+		if (numberToAdd < 1) {
+			return;
+		}
+		let maxTileId = 0;
+		for (let i = 0; i < numberToAdd; i++) {
 			let t: TileModel = this.getNewTile(this.currencyPairs[0]);
 			this.state.selectedPairs.push(t);
-			this.priceService.addTile(t.tileId);
+			if (i === numberToAdd - 1) {
+				maxTileId = t.tileId;
+			}
 		}
 		this.appState.set('selectedPairs', this.state.selectedPairs);
+		setTimeout(() => (this.priceService.addTile(maxTileId)), 0);
 	}
 
 	addPair(selectedPair) {
@@ -117,7 +112,6 @@ export class SelfTileContainerComponent implements OnInit, OnDestroy {
 	}
 
 	clearAll() {
-		this.stop();
 		this.state.selectedPairs = Array<TileModel>();
 		this.tileId = 0;
 		this.priceService.resetTiles();

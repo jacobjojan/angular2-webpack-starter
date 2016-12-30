@@ -1,10 +1,18 @@
 <md-toolbar color="primary">
+	<i class="fa fa-spin fa-cog fa-fw"></i>
 	<span>Marquee Trader Angular Demo 2</span>
 	<nav>
 		<button md-button
 				color=""
 				[routerLink]=" ['./stress'] ">
-			Subscribing Tiles
+				Empty
+		</button>
+		|
+		<button md-button
+				color=""
+				[routerLink]="['./stress'] "
+				[queryParams]="{initialQuantity: 100}">
+			Loaded
 		</button>
 		|
 		<button md-button

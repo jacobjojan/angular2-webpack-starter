@@ -10,11 +10,11 @@ export class PriceUpdate {
 
 export class TileModel {
 	serverTileId: number;
-	cross: string;
-	currency1: string;
-	currency2: string;
+	cross: string = 'EUR USD';
+	currency1: string = 'EUR';
+	currency2: string = 'USD';
 	tileId: number;
-	price: string;
+	price: string = '95.11';
 
 	constructor(tileId: number, cross: string) {
 		this.tileId = tileId;

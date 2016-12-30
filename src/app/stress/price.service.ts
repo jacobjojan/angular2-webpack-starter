@@ -31,7 +31,6 @@ export class PriceService {
 	                                                               'PriceService');
 
 	constructor() {
-		console.log('PriceService created');
 		this.initWorker();
 		this.tileCount$.subscribe(lastTileCount => {
 			this.lastTileCount = lastTileCount;
@@ -70,10 +69,10 @@ export class PriceService {
 		this.addTilesSubject$.next(tileId);
 
 		if (this.isWorkerEnabled$.getValue()) {
-			console.log('PriceService addTile to worker tileId = ' + tileId);
+			// console.log('PriceService addTile to worker tileId = ' + tileId);
 			this.worker.postMessage({command: 'add', params: [tileId]});
 		} else {
-			console.log('PriceService addTile to in-memory tileId = ' + tileId);
+			// console.log('PriceService addTile to in-memory tileId = ' + tileId);
 		}
 	}
 
@@ -87,37 +86,35 @@ export class PriceService {
 	public startWorker(lastTileCount: number): void {
 		if (!this.workerInitialized) {
 			this.workerInitialized = true;
-			console.log('PriceService starting worker with tileId = ' + lastTileCount);
+			// console.log('PriceService starting worker with tileId = ' + lastTileCount);
 			this.worker.postMessage({command: 'start', params: [lastTileCount]});
 		}
 		else {
-			console.warn('PriceService startWorker cannot start worker since its already initialized');
+			// console.warn('PriceService startWorker cannot start worker since its already initialized');
 		}
 	}
 
 	public stopWorker(): void {
 		if (this.workerInitialized) {
-			console.log('PriceService stopping worker');
+			// console.log('PriceService stopping worker');
 			this.worker.postMessage({command: 'stop'});
 			this.workerInitialized = false;
 		} else {
-			console.debug('PriceService stopWorker cannot stop worker since its not initialized');
+			// console.debug('PriceService stopWorker cannot stop worker since its not initialized');
 		}
 	}
 
 	public toggleWorker(enable): void {
-		console.log('PriceService toggle worker = '+enable);
+		// console.log('PriceService toggle worker = '+enable);
 		this.isWorkerEnabled$.next(enable);
 	}
 
 	private initWorker(): void {
 		if (!this.workerInitialized) {
-			console.log('PriceService initWorker');
 			this.worker = new Worker('../../workers/worker.js');
 			this.workerPrices$ = Observable.fromEvent(this.worker, 'message').publish().refCount();
-			console.log('PriceService initWorker initialized');
 		} else {
-			console.warn('PriceService initWorker cannot initWorker since its already initialized');
+			// console.warn('PriceService initWorker cannot initWorker since its already initialized');
 		}
 	}
 
