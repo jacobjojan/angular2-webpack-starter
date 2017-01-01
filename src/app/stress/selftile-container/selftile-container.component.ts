@@ -1,11 +1,16 @@
 import {
-	Component, OnDestroy, ChangeDetectionStrategy,
-	ChangeDetectorRef, Input, NgZone, AfterContentInit, OnInit, AfterViewInit
+	Component,
+	OnDestroy,
+	ChangeDetectionStrategy,
+	ChangeDetectorRef,
+	Input,
+	NgZone,
+	OnInit,
+	AfterViewInit
 } from "@angular/core";
 import { PriceService } from "../price.service";
 import { AppState } from "../../app.service";
-import { TileModel } from '../price.model';
-import { Subscription } from "rxjs";
+import { TileModel } from "../price.model";
 
 @Component({
 	           selector: 'self-tile-container',
@@ -21,7 +26,7 @@ export class SelfTileContainerComponent implements OnInit, AfterViewInit, OnDest
 	state: any = {selectedPairs: Array<TileModel>()};
 	selectedPairs: Array<any>;
 	_isWorker: boolean = false;
-	private frequency: number = 50;
+	public frequency: number = 50;
 	private tileId: number = 0;
 
 	constructor(private priceService: PriceService,

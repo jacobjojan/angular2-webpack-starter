@@ -60,6 +60,7 @@ npm-debug.log
 /dist/**
 /.awcache
 .webpack.json
+/compiled/
 
 # Doc #
 /doc/
@@ -67,3 +68,10 @@ npm-debug.log
 # IDE #
 .idea/
 *.swp
+
+
+# Angular #
+*.ngfactory.ts
+*.css.shim.ts
+*.ngsummary.json
+*.shim.ngstyle.ts

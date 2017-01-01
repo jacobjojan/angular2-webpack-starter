@@ -10,9 +10,6 @@ export const ROUTES: Routes = [
   { path: 'about', component: AboutComponent },
   { path: 'stress', component: StressComponent },
   // { path: 'loaded/:initialQuantity', component: StressComponent },
-  {
-    path: 'detail', loadChildren: () => System.import('./+detail')
-      .then((comp: any) => comp.default),
-  },
+  { path: 'detail', loadChildren: './+detail/index#AboutModule'},
   { path: '**',    component: NoContentComponent },
 ];

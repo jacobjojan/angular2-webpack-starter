@@ -1,13 +1,13 @@
-import { Observable, Subject, BehaviorSubject, Subscription } from "rxjs";
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/observable/merge';
-import 'rxjs/add/observable/interval';
-import 'rxjs/add/observable/range';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/scan';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/share';
-import 'rxjs/add/operator/publish';
+import { Observable, Subject } from "rxjs";
+import "rxjs/add/observable/fromEvent";
+import "rxjs/add/observable/merge";
+import "rxjs/add/observable/interval";
+import "rxjs/add/observable/range";
+import "rxjs/add/operator/map";
+import "rxjs/add/operator/scan";
+import "rxjs/add/operator/switchMap";
+import "rxjs/add/operator/share";
+import "rxjs/add/operator/publish";
 import { PriceUpdate } from "./price.model";
 
 export class PriceHelper {
@@ -29,9 +29,9 @@ export class PriceHelper {
 					return {num: 0, reset: true};
 				})
 		)
-		.scan((acc, value) => {
-			return value.reset ? 0 : value.num;
-		}, 0);
+			.scan((acc, value) => {
+				return value.reset ? 0 : value.num;
+			}, 0);
 	}
 
 	public static getTicks$(tileCount$: Observable<number>,
@@ -42,7 +42,9 @@ export class PriceHelper {
 					return Observable.range(1, tileCount);
 				});
 			})
-			.map((tileId: number) => new PriceUpdate(tileId, (Math.random() * 100).toFixed(2)))
+			.map(
+				(tileId: number) => new PriceUpdate(tileId, (Math.random() * 100).toFixed(
+					2)))
 			.publish().refCount();
 	}
 
