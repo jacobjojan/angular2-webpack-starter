@@ -1,11 +1,16 @@
 import {
-	Component, Input, OnInit, OnDestroy,
-	ChangeDetectionStrategy, ChangeDetectorRef, NgZone
-} from '@angular/core';
+	Component,
+	Input,
+	OnInit,
+	OnDestroy,
+	ChangeDetectionStrategy,
+	ChangeDetectorRef,
+	NgZone
+} from "@angular/core";
 import { PriceService } from "../price.service";
 import { Subscription } from "rxjs";
 import { TileModel } from "../price.model";
-import 'rxjs/add/operator/timeInterval';
+import "rxjs/add/operator/timeInterval";
 
 @Component({
 	           selector: 'self-tile',
@@ -38,7 +43,7 @@ export class SelfTileComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy() {
-		if (this.tileSubscription && this.tileSubscription.unsubscribe){
+		if (this.tileSubscription && this.tileSubscription.unsubscribe) {
 			this.tileSubscription.unsubscribe();
 		}
 	}

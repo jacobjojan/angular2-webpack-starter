@@ -1,16 +1,18 @@
-import { PriceUpdate } from './price.model';
-import { Injectable } from '@angular/core';
+import { PriceUpdate } from "./price.model";
+import { Injectable } from "@angular/core";
 import { Observable, Subject, BehaviorSubject, Subscription } from "rxjs";
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/observable/merge';
-import 'rxjs/add/observable/interval';
-import 'rxjs/add/observable/range';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/scan';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/share';
-import 'rxjs/add/operator/publish';
-import { PriceHelper } from './price-helper';
+import "rxjs/add/observable/fromEvent";
+import "rxjs/add/observable/merge";
+import "rxjs/add/observable/interval";
+import "rxjs/add/observable/range";
+import "rxjs/add/operator/map";
+import "rxjs/add/operator/scan";
+import "rxjs/add/operator/switchMap";
+import "rxjs/add/operator/share";
+import "rxjs/add/operator/publish";
+import { PriceHelper } from "./price-helper";
+
+const PriceWorker = require("worker-loader!../../workers/worker.setup");
 
 @Injectable()
 export class PriceService {
@@ -31,6 +33,7 @@ export class PriceService {
 	                                                               'PriceService');
 
 	constructor() {
+		this.worker = new PriceWorker;
 		this.initWorker();
 		this.tileCount$.subscribe(lastTileCount => {
 			this.lastTileCount = lastTileCount;
@@ -62,7 +65,7 @@ export class PriceService {
 				return svc.ticks$;
 			}
 		})
-		.filter(tileUpdate => tileUpdate.tileId === tileId);
+			.filter(tileUpdate => tileUpdate.tileId === tileId);
 	}
 
 	public addTile(tileId: number): void {
@@ -90,7 +93,8 @@ export class PriceService {
 			this.worker.postMessage({command: 'start', params: [lastTileCount]});
 		}
 		else {
-			// console.warn('PriceService startWorker cannot start worker since its already initialized');
+			// console.warn('PriceService startWorker cannot start worker since its
+			// already initialized');
 		}
 	}
 
@@ -100,7 +104,8 @@ export class PriceService {
 			this.worker.postMessage({command: 'stop'});
 			this.workerInitialized = false;
 		} else {
-			// console.debug('PriceService stopWorker cannot stop worker since its not initialized');
+			// console.debug('PriceService stopWorker cannot stop worker since its not
+			// initialized');
 		}
 	}
 
@@ -111,10 +116,12 @@ export class PriceService {
 
 	private initWorker(): void {
 		if (!this.workerInitialized) {
-			this.worker = new Worker('../../workers/worker.js');
-			this.workerPrices$ = Observable.fromEvent(this.worker, 'message').publish().refCount();
+			//this.worker = new Worker('../../workers/worker.js');
+			this.workerPrices$ =
+				Observable.fromEvent(this.worker, 'message').publish().refCount();
 		} else {
-			// console.warn('PriceService initWorker cannot initWorker since its already initialized');
+			// console.warn('PriceService initWorker cannot initWorker since its already
+			// initialized');
 		}
 	}
 
