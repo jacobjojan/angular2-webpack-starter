@@ -9,19 +9,19 @@
     "sourceMap": true,
     "noEmit": true,
     "noEmitHelpers": true,
+    "importHelpers": true,
     "strictNullChecks": false,
-    "baseUrl": "./src",
-    "paths": {
-    },
     "lib": [
       "dom",
       "es6"
+    ],
+    "typeRoots": [
+      "node_modules/@types"
     ],
     "types": [
       "hammerjs",
       "jasmine",
       "node",
-      "selenium-webdriver",
       "source-map",
       "uglify-js",
       "webpack"

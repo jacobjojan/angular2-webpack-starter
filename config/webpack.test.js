@@ -91,6 +91,8 @@ module.exports = function (options) {
          */
         {
           test: /\.ts$/,
+          use: [
+            {
           loader: 'awesome-typescript-loader',
           query: {
             // use inline sourcemaps for "karma-remap-coverage" reporter
@@ -104,6 +106,9 @@ module.exports = function (options) {
 
             }
           },
+            },
+            'angular2-template-loader'
+          ],
           exclude: [/\.e2e\.ts$/]
         },
 
@@ -211,13 +216,22 @@ module.exports = function (options) {
        * See: https://gist.github.com/sokra/27b24881210b56bbaff7
        */
       new LoaderOptionsPlugin({
-        debug: true,
+        debug: false,
         options: {
-
+          // legacy options go here
         }
       }),
 
     ],
+
+    /**
+     * Disable performance hints
+     *
+     * See: https://github.com/a-tarasyuk/rr-boilerplate/blob/master/webpack/dev.config.babel.js#L41
+     */
+    performance: {
+      hints: false
+    },
 
     /**
      * Include polyfills or mocks for various node stuff
