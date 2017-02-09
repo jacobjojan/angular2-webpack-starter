@@ -1,5 +1,5 @@
 /**
- * @license Angular v2.4.6
+ * @license Angular v2.4.7
  * (c) 2010-2017 Google, Inc. https://angular.io/
  * License: MIT
  */
@@ -3634,7 +3634,7 @@
     /**
      * @stable
      */
-    var /** @type {?} */ VERSION = new _angular_core.Version('2.4.6');
+    var /** @type {?} */ VERSION = new _angular_core.Version('2.4.7');
 
     exports.NgLocalization = NgLocalization;
     exports.CommonModule = CommonModule;
