@@ -1,5 +1,5 @@
 import { PriceUpdate } from "./price.model";
-import { Injectable } from "@angular/core";
+import { Injectable, NgZone } from "@angular/core";
 import { Observable, Subject, BehaviorSubject, Subscription } from "rxjs";
 import "rxjs/add/observable/fromEvent";
 import "rxjs/add/observable/merge";
@@ -61,6 +61,7 @@ export class PriceService {
 				// console.debug('PriceService getTilePrice$ switching to worker');
 				return svc.workerPrices$.map(msg => msg.data);
 			} else {
+				NgZone.assertNotInAngularZone();
 				// console.debug('PriceService getTilePrice$ switching to non-worker');
 				return svc.ticks$;
 			}

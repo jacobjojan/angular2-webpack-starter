@@ -35,6 +35,7 @@ export class SelfTileComponent implements OnInit, OnDestroy {
 			this.tileSubscription = this.priceService.getTilePrice$(this.model.tileId)
 				.timeInterval()
 				.subscribe((x) => {
+					NgZone.assertNotInAngularZone();
 					this.interval = x.interval;
 					this.model.updatePrice(x.value);
 					this.cd.detectChanges();

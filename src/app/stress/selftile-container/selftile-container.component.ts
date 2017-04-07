@@ -102,13 +102,17 @@ export class SelfTileContainerComponent implements OnInit, AfterViewInit, OnDest
 			}
 		}
 		this.appState.set('selectedPairs', this.state.selectedPairs);
-		setTimeout(() => (this.priceService.addTile(maxTileId)), 0);
+		this.zone.runOutsideAngular(() => {
+			setTimeout(() => (this.priceService.addTile(maxTileId)), 0);
+		});
 	}
 
 	addPair(selectedPair) {
 		let t: TileModel = this.getNewTile(selectedPair);
 		this.state.selectedPairs.push(t);
-		this.priceService.addTile(t.tileId);
+		this.zone.runOutsideAngular(() => {
+			this.priceService.addTile(t.tileId);
+		});
 		this.appState.set('selectedPairs', this.state.selectedPairs);
 	}
 
@@ -119,7 +123,9 @@ export class SelfTileContainerComponent implements OnInit, AfterViewInit, OnDest
 	clearAll() {
 		this.state.selectedPairs = Array<TileModel>();
 		this.tileId = 0;
-		this.priceService.resetTiles();
+		this.zone.runOutsideAngular(() => {
+			this.priceService.resetTiles();
+		});
 		this.appState.set('selectedPairs', this.state.selectedPairs);
 	}
 }
